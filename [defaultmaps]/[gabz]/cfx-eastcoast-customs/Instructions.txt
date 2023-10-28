@@ -1,0 +1,6 @@
+write start EastCoastCustoms in your server.cfg extract and drag folder into your server resource folder, restart server then goto: EastCoastCustoms ingame to view your new mechshop.
+
+For More Ultimate Mods Visit:
+http://payhip.com/fivemkingsfivemmods
+
+Location El Rancho Boulevard

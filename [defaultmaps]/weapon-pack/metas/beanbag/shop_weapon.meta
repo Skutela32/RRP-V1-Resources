@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WeaponShopItemArray>
+	<weaponShopItems>
+		<Item>
+			<lockHash>CU_WEP_BEANBAG</lockHash>
+			<nameHash>WEAPON_BEANBAG</nameHash>
+			<cost value ="3250"/>
+			<ammoCost value="90"/>
+			<textLabel>WT_BEANBAG</textLabel>
+			<weaponDesc>WTD_BEANBAG</weaponDesc>
+			<weaponTT>WTT_BEANBAG</weaponTT>
+			<weaponUppercase>WTU_BEANBAG</weaponUppercase>
+			<id value = "32"/>
+			<weaponComponents />
+			<availableInSP value="true" />
+		</Item>
+	</weaponShopItems>
+</WeaponShopItemArray>	

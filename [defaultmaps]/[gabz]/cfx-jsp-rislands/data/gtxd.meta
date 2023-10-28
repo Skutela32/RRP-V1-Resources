@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CMapParentTxds>
+ <txdRelationships>
+  <Item>
+    <parent>nagoya_expressway_tex_1</parent>
+    <child>nagoya_expressway_tex</child>
+  </Item>
+  <Item>
+    <parent>nagoya_expressway_tex_2</parent>
+    <child>nagoya_expressway_tex_1</child>
+  </Item>
+  <Item>
+    <parent>nagoya_expressway_tex_3</parent>
+    <child>nagoya_expressway_tex_2</child>
+  </Item>
+  <Item>
+    <parent>nagoya_expressway_tex_4</parent>
+    <child>nagoya_expressway_tex_3</child>
+  </Item>
+  </txdRelationships>
+</CMapParentTxds>
