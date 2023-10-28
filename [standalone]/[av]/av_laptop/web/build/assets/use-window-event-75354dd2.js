@@ -1,0 +1,1 @@
+import{r as t}from"./index-eaf8ef63.js";function f(e){return`___ref-${e||""}`}function u(e,r,n){t.useEffect(()=>(window.addEventListener(e,r,n),()=>window.removeEventListener(e,r,n)),[e,r])}export{f as g,u};

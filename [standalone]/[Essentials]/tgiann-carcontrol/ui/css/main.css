@@ -1,0 +1,71 @@
+body {
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  background: none;
+  overflow: hidden;
+  user-select: none;
+  justify-content: center;
+}
+
+.ana {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 3px;
+  transform: scale(0.75);
+}
+
+.button {
+  position: relative;
+  background: linear-gradient(180deg, rgba(52,53,53,1) 0%, rgba(19,19,19,1) 100%);
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 5px;
+  border-radius: 3px;
+}
+
+.button-cizgi {
+  position: absolute;
+  width: 55%;
+  height: 8px;
+  background: #0c0c0c;
+  border-radius: 50vh;
+  bottom: 10px;
+}
+
+.bos-kutu {
+  width: 100px;
+  height: 100px;
+  margin-right: 5px;
+}
+
+.ust, .orta, .alt {
+  display: flex;
+}
+
+.orta {
+  padding: 5px 0;
+}
+
+.zero-right {
+  margin-right: 0;
+}
+
+.button:hover .button-cizgi {
+  background: linear-gradient(180deg, #06530f 0%, #072408 100%);
+}
+
+.aktif {
+  background: linear-gradient(180deg, #00f511 0%, #003b03 100%) !important;
+}
+
+.pasif {
+  background: linear-gradient(180deg, #f50000 0%, #3b0000 100%) !important;
+}
