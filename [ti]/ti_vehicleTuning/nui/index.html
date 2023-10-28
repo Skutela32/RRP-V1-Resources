@@ -1,0 +1,2333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Akshar:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="fa.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2.7.7/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+
+    <script type="text/javascript" src="graph.js"></script> 
+
+    <style type="text/css">
+        :root {
+            --txt-w:            rgba(255,255,255,1.0);
+            --txt-wt:           rgba(255,255,255,0.7);
+            --highlight:        #614385;
+            --selected:         rgba(20,20,20,1.0);
+            --highlight-s-h:    #2ba397;
+            --highlight-s:      #238d82;
+            --content:          rgba(25,25,25,1.0);
+            --item:             rgba(30,30,30,1.0);
+            --navbar:           rgba(25,25,25,1.0);
+            --main-dark:        23,23,23;
+            --secondary-dark:   30,30,30;
+            --main-light:       255,255,255;
+            --accent-one:       177,151,252;
+            --accent-two:       103,65,217;
+        }
+
+        * {            
+            font-family:'Akshar', sans-serif;
+            user-select:none;
+            color: var(--txt-w);
+            font-size: 18px;
+        }
+
+        html,body {
+            margin:0;
+            padding:0;
+        }
+
+        body {
+            position:absolute;
+            left:0;
+            top:0;
+            width:100%;
+            height:100%;
+            opacity:1;
+            display:block;
+        } 
+
+        #bg {
+            position:absolute;
+            left:0px;
+            top:0px;
+            width:100%;
+            height:100%;            
+
+            background-size:100% 100%;
+            background-image:url("C:/Users/owner/Pictures/Tebit/garage1.png");
+            background-repeat:no-repeat;
+            background-position:center;
+
+            filter: blur(5px);
+
+            opacity: 0;
+        }
+
+        /* PAGE */
+
+        #page {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+
+            display: none;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: stretch;
+
+            height: 750px;
+            width: 1400px;
+
+            overflow: hidden;
+
+            box-shadow: 0 15px 50px 15px rgba(0,0,0,0.65);
+        }
+
+        /* TASKBAR */
+
+        #taskbar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        #taskbar > div:first-child {
+            font-size: 18px;
+        }
+
+        #taskbar > div:last-child {
+            font-size: 18px;
+            color: var(--txt-w);
+        }
+
+        #taskbar > div:last-child:hover {
+            cursor: pointer;
+            color: var(--highlight);
+        }
+
+        /* CONTAINER */
+
+        #container {
+            display: relative;
+            height: 100%;
+            width: 100%;
+
+            display: grid;
+            grid-template-columns: 25% 75%;
+            overflow: auto;
+            text-align: center;
+        }
+
+        /* NAV */
+
+        #nav {  
+            flex-grow: 1;
+            flex-shrink: 0; 
+
+/*            display: flex;
+            flex-direction: column;
+            gap: 5px;*/
+
+            background: var(--navbar);
+            text-align: left;
+
+            display: grid;
+            grid-template-columns: 100%;
+            grid-template-rows: 105px calc(100% - 185px) 30px 50px;
+            overflow: auto;
+        }
+
+        /* PLAYERDATA */
+
+        #job-info {
+            flex-grow: 0;
+            flex-shrink: 0;
+
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 10px;
+            padding: 20px;
+
+            background: var(--highlight);
+        }
+
+        #job-image {
+            height: 64px;
+            width: 64px;
+
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url("tuning.png");
+        }
+
+        #player-name {
+            color: var(--txt-w);
+        }
+
+        #job-name {
+            color: var(--txt-w);
+            font-size: 16px;
+        }
+
+        #job-rank {
+            color: var(--txt-wt);
+            font-size: 16px;
+        }
+
+        /* ITEMS */
+
+        #items {
+            flex-grow: 2;
+            flex-shrink: 0;
+            overflow: hidden scroll;
+        }
+
+        #items > .category {
+            padding: 10px 0px;
+            color: var(--txt-wt);
+            font-size: 20px;
+            text-align: center;
+            text-transform: capitalize;      
+            background-color: var(--selected);     
+        }
+
+        #items > .item {
+            padding: 15px 0px;
+            color: var(--txt-wt);
+            font-size: 16px;
+            text-indent: 25px;  
+            text-align: left;
+            text-transform: capitalize;
+        }
+
+        #items > .item:hover:hover,
+        #items > .selected {            
+            color: var(--txt-w);
+        }
+
+        #items > .item:hover {
+            background-color: var(--selected);
+            cursor: pointer;
+        } 
+
+        #items > .selected {        
+            background-image: linear-gradient(
+                to right, 
+                var(--highlight) 0%, 
+                var(--highlight) 5px, 
+                var(--selected) 5px, 
+                var(--selected) 100%
+            );
+        }
+
+        /* FOOTER */
+
+        #footer-text {          
+            margin: 2px 12px;
+            color: var(--txt-wt);
+            font-size: 14px;
+        }
+
+        #footer {
+            flex-grow: 0;
+            flex-shrink: 0;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+        }
+
+        #footer > svg {
+            flex-grow: 1;
+            font-size: 22px;
+            text-align: center;
+            padding: 15px;
+            color: var(--txt-wt);
+            background: var(--highlight-s);
+        }
+
+        #footer > svg:hover {
+            background: var(--highlight-s-h);
+            color: var(--txt-w);
+            cursor: pointer;
+        }
+
+        /* CONTENT */
+
+        #content {          
+            flex-grow: 10;
+            flex-shrink: 0;
+
+            display: grid;
+            grid-template-columns: 100%;
+            grid-template-rows: 60px 50% calc(50% - 60px);
+            overflow: auto;
+
+            background: var(--content);
+        }
+
+        #content > div {
+            position: relative;
+            width: calc(100% - 0px);
+            height: calc(100% - 0px);
+        }
+
+        /* CHART */
+
+        #chart {
+            display: grid;
+            grid-template-columns: calc(100% - 240px) 240px;
+            grid-template-rows: 100%;
+            background: var(--navbar);
+        }
+
+        #graph {            
+            padding: 10px;
+            flex-grow: 5;
+        }
+
+        #stats {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #stats > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }       
+
+        #stats > div > div {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-transform: capitalize;
+            flex-wrap: wrap;
+        }
+
+        #stats > div > div:first-child {       
+            font-size: 16px;
+            line-height: 30px;
+            align-items: center;    
+            justify-content: center;
+            flex-grow: 0;
+        }
+
+        #stats > div > div:last-child {         
+            justify-content: center;   
+            flex-grow: 1;
+        }
+
+        #stats > div > div > .status {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 35px;
+            flex-grow: 0;
+            flex-shrink: 0;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+            background: linear-gradient(
+                to top,
+                #614385 0%,
+                #614385 5px,
+                rgb(20,20,20) 5px,
+                rgb(20,20,20) 100%
+            );      
+
+            box-shadow: 0 5px 5px 5px var(--selected);  
+            border: 2px solid var(--highlight);
+            margin: 4px;
+        }
+
+        #stats > div > div > .status > div:first-child {
+            font-size: 16px;
+            color: var(--txt-w);
+        }
+
+        #stats > div > div > .status > div:last-child {
+            font-size: 12px;
+            color: var(--txt-wt);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; 
+            width: 95%; 
+        }
+
+        /* TITLE */
+
+        #title {
+            background: var(--selected);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: capitalize;
+        }
+
+        /* TABLE */
+
+        #table-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        #table {
+            width: 100%;
+            height: auto;
+            display: grid;
+            grid-template-columns: repeat(5,auto);
+            grid-row-gap: 5px;
+            margin-bottom: 10px;
+
+            overflow: hidden auto;
+        }
+
+        #table > div {
+            background: var(--item);
+        }
+
+        #table > .header {  
+            background: var(--selected);    
+            padding: 5px 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #table > .label {   
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start;
+            justify-content: center;
+            padding: 5px 0px;   
+        }
+
+        #table > .label > div:first-child {
+            font-size: 16px;    
+            text-indent: 10px;
+        }
+
+        #table > .label > div:last-child {
+            font-size: 14px;    
+            color: var(--txt-wt);   
+            text-indent: 10px;
+        }
+
+        #table > .item {
+            text-align: center; 
+            display: flex;
+            flex-direction: row;
+            align-items: center;    
+            justify-content: center;    
+            color: var(--txt-wt);
+        }
+
+        #table > .value-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;    
+            justify-content: center; 
+            padding: 5px 0px;   
+        }
+
+        #table > .value-container > .input {
+            width: 120px;
+        }
+
+        .slider {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 8px;
+          background: var(--selected);
+          outline: none;
+          opacity: 0.7;
+          -webkit-transition: .2s;
+          transition: opacity .2s;
+          border-radius: 2px;
+        }
+
+        .slider:hover {
+          opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 12px;
+          height: 12px;
+          background: var(--txt-w);
+          cursor: pointer;
+          border-radius: 2px;
+        }
+
+        #table > .value-container > .value {
+            text-align: center; 
+            display: flex;
+            flex-direction: row;
+            align-items: center;    
+            justify-content: center;    
+            gap: 10px;
+        }
+
+        svg {
+            color: var(--txt-wt);
+        }
+
+        svg:hover {
+            color: var(--txt-w);
+            cursor: pointer;
+        }
+
+        #table > .value-container > .value > input {
+            margin: 0px;
+            width: 70px;
+            padding: 3px 3px;
+            background: var(--navbar);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 2px;
+            text-align: center;
+            font-size: 16px;
+            color: var(--txt-wt);
+        }
+
+        /* SCROLLBAR */
+
+        ::-webkit-scrollbar {
+            direction:rtl;
+            width: 0px;
+        }
+
+        ::-webkit-scrollbar-track {
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            border-radius:4px;
+            background-color: var(--selected); 
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        #overlay {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+        }
+
+        #loader {
+          border: 16px solid var(--navbar);
+          border-radius: 50%;
+          border-top: 16px solid var(--highlight);
+          width: 120px;
+          height: 120px;
+          -webkit-animation: spin 2s linear infinite; /* Safari */
+          animation: spin 2s linear infinite;
+
+          position: absolute;
+          left: calc(50% - 60px);
+          top: calc(50% - 60px);
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* HUD */
+
+        #hud {            
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%,-120%);
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+
+            height: auto;
+            width: auto;
+        }
+
+        #q-app {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;    
+        }
+
+        #q-app > #damage {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;            
+        }
+
+        #q-app > #aspiration {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;            
+        }
+
+        v-app {
+            display: none;
+            opacity: 0;
+            width: 70px;
+            height: 70px;
+            overflow: none;
+            transition: all 0.2s;
+        }
+
+        .dmg {
+            opacity: 0;
+        }
+
+        .asp {
+            opacity: 1;
+        }
+
+        .prog1 {
+            position: relative;
+            left: 0px;
+            top: 0px;
+        }
+
+        .prog2 {
+            position: relative;
+            left: 0%;
+            top: -64px;
+        }
+
+        .pistons {
+            background-image: url('piston.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .aspiration {
+            background-image: url('./turbo.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .inertia {
+            background-image: url('./turbo.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .crankshaft {
+            background-image: url('crankshaft.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .conrods {
+            background-image: url('./conrod.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .knocking {
+            background-image: url('./knocking.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .valves {
+            background-image: url('./valve.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .nitrous {
+            background-image: url('./nitrous.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #boost {            
+            position: absolute;
+            top: 100%;
+            left: 75%;
+            transform: translate(-50%,-120%);
+
+            display: none;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+
+            height: auto;
+            width: auto;
+        }
+
+        #boost > .boost1,
+        #boost > .boost2 {
+            background: red;
+            height: 40px;
+            width: 40px;
+            border-radius: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            transform: rotate(90deg);
+            transition: all 0.5s;
+        }
+
+        #timer {
+            width: 360px;
+            height: 120px;
+            border-radius: 5px;
+            background: var(--item);
+
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+
+            gap: 10px;
+            padding: 20px;
+        }
+
+        #timer > .display {
+            background: var(--selected);
+            border-radius: 5px;
+            flex-grow: 1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #timer > .display > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #timer > .display > div:first-child {
+            flex-grow: 0;
+            flex-shrink: 0;
+            font-size: 14px;
+            color: var(--txt-wt);
+        }
+
+        #timer > .display > div:last-child {
+            flex-grow: 0;
+            flex-shrink: 0;
+            font-size: 26px;
+            color: var(--txt-w);
+        }
+
+        #timer > .buttons {
+            border-radius: 5px;
+            flex-grow: 0;
+            flex-shrink: 0;
+
+            display: grid;
+            grid-template-columns: 50% 50%;
+            grid-template-rows: 50% 50%;
+        }
+
+        #timer > .buttons2 {
+            grid-template-columns: 50% 50%;
+            width: 60px;
+        }
+
+        #timer > .buttons1 {
+            grid-template-columns: 50%;
+            width: 30px;
+        }
+
+        #timer > .buttons > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            font-weight: 600;
+
+            color: var(--txt-wt);
+        }
+
+        #timer > .buttons > .down {
+            transform: rotate(180deg);
+        }
+
+        #timer > .buttons > div:hover { 
+            color: var(--txt-w);
+            cursor: pointer;
+        }
+
+        /* ----- MAIN WRAPPER TO POSITION ----- */
+        /* ----- MAIN WRAPPER TO POSITION ----- */
+        /* ----- MAIN WRAPPER TO POSITION ----- */
+
+        .wrapper {
+            display: grid;
+            grid-template-rows: 1fr;
+
+            position: absolute;
+            background-color: rgb(var(--main-dark));
+            background-size: contain;
+            padding: 10px 15px 0px 15px;
+            border-radius: 5px;
+            min-width: 480px;
+
+            /* IF YOU FIND UI SIZE TOO SMALL JUST COMMENT THIS */
+            bottom: 2.5%;
+            right: 1.5%;
+
+            /* AND UNCOMMENT THIS */
+            /* transform: scale(1.25);
+            bottom: 5%;
+            right: 3.5%; */
+        }
+
+        .header__wrapper {
+            display: flex;
+            justify-content: space-between;
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+
+        .header__title {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .header__controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .header__controls > .btn {
+            background: rgba(var(--main-light), .08);
+            width: 1.35em;
+            height: 1.35em;
+            padding: 1.5px;
+            margin: 2px;
+            border-radius: 5px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            transition: box-shadow .125s ease-in-out;
+            cursor: pointer;
+        }
+
+        .header__controls > .btn:hover, .btn:active, .btn:visited, .btn:focus, .btn:focus-visible {
+            box-shadow: inset 0px 0px 12px 1px rgb(var(--accent-two));
+        }
+
+        .info__wrapper {
+            display: grid;
+            grid-template-rows: 1fr 4fr;
+            grid-template-columns: 1.5fr 1fr;
+            grid-column-start: 1;
+            grid-column-end: 3;
+            grid-column-gap: 10px;
+            align-items: center;
+        }
+
+        .info__screen {
+            grid-row-start: -2;
+            grid-row-end: -1;
+            width: 100%;
+            background: rgb(var(--secondary-dark));
+            box-shadow: inset 0px 2px 3px 0px #000000a1, inset 0px 0px 60px 30px #ffffff12;
+        }
+
+        /* ----- TARGET DROP DOWN ----- */
+        /* ----- TARGET DROP DOWN ----- */
+        /* ----- TARGET DROP DOWN ----- */
+        select {
+            background-color: rgb(var(--secondary-dark));
+            color: white;
+            width: 50%;
+            border: none;
+            font-weight: 600;
+            padding: 2px;
+            border-radius: 2px;
+            box-shadow: inset 0px 1px 3px 0px #000000a1, inset 0px 0px 14px 1px #ffffff12;
+        }
+
+        select:focus-within {
+            outline: none;
+        }
+
+        select > option {
+            font-size: .75rem;
+            font-weight: 400;
+            color: white;
+        }
+
+        .info__screen-target {
+            margin: 5px 0px;
+        }
+
+        .info__screen-boost {
+            display: flex;
+            justify-content: flex-end;
+            padding: 5px 0px;
+            margin: 0px 5px;
+            border-top: 2px solid rgb(var(--accent-one));
+            border-bottom: 2px solid rgb(var(--accent-one));
+        }
+
+        .info__boost-label {
+            font-size: .8rem;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .info__value-wrapper {
+            display: flex;
+            align-items: baseline;
+            max-height: 80px;
+        }
+
+        .info__boost-value {
+            font-size: 5rem;
+            line-height: 4rem;
+        }
+
+        .info__boost-unit {
+            position: relative;
+            right: 0;
+            bottom: 0;
+            font-size: .65rem;
+        }
+
+        .info__max-label {
+            margin-right: 2.5px;
+            font-size: .8rem;
+        }
+
+        .info__max-value-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin: 0px 5px;
+            align-items: baseline;
+            font-size: 1.25rem;
+        }
+
+        .info__maximum-alert {
+            display: none;
+            align-items: baseline;
+            font-size: .6rem;
+            color: #ff004c;
+            animation: warningAlert 1s ease-in-out infinite;
+        }
+
+        @keyframes warningAlert {
+            0% {
+                color: #ff004c;
+            }
+            50% {
+                color: #ff004c82;
+            }
+            100% {
+                color: #ff004c;
+            }
+        }
+
+        .info__maximum-alert > i {
+            margin-right: 2px;
+        }
+
+        .info__maximum-value {
+            display: flex;
+            align-items: baseline;
+            margin: 5px 0px 2.5px 0px;
+        }
+
+        .info__max-boost-value {
+            font-weight: 600;
+            transition: color .125s ease-in-out;
+        }
+
+        .footer__wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+
+        .footer__logo {
+            position: relative;
+            margin-right: auto;
+            padding: 10px 0px;
+            font-size: .75rem;
+            color: white;
+        }
+
+        /* ----- ACTIONS CONTROLS ----- */
+        /* ----- ACTIONS CONTROLS ----- */
+        /* ----- ACTIONS CONTROLS ----- */
+
+        .actions__wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            grid-column-start: 2;
+            grid-row-start: -2;
+            grid-row-end: -1;
+        }
+
+        /* ----- LED LIGHTS CLASSES ----- */
+        /* ----- LED LIGHTS CLASSES ----- */
+        /* ----- LED LIGHTS CLASSES ----- */
+
+        .led {
+            width: 24px;
+            height: 12px;
+            margin-right: 16.5%;
+            background-color: #ABFF00;
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #39ff9b 0 -1px 9px, #39ff9b 0 1px 6px;
+            transition: background-color, color .125s ease-in-out;
+        }
+
+        .led-yellow {
+            background-color: #ffcf00;
+            border-radius: 10px;
+            box-shadow: rgb(0 0 0 / 20%) 0 -1px 7px 1px, inset #ffcf00 0 -1px 9px, #ffcf00 0 1px 6px;
+        }
+
+        .led-red {
+            background-color: #ff004c;
+            border-radius: 10px;
+            box-shadow: rgb(0 0 0 / 20%) 0 -1px 7px 1px, inset #ff004c 0 -1px 9px, #e53657 0 1px 6px;
+        }
+
+
+        /* VALUE DIAL */
+        /* VALUE DIAL */
+        /* VALUE DIAL */
+
+        .dial__wrapper {
+          position: relative;
+          background-color: grey;
+          width: 4em;
+          height: 4em;
+          border-radius: 50%;
+          border: solid 0.25em #0e0e0e;
+          background: rgb(var(--secondary-dark));
+          background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #1d1d1d), color-stop(1, #131313));
+          box-shadow: 0 0.2em 0.1em 0.05em rgba(255, 255, 255, 0.1) inset, 0 -0.2em 0.1em 0.05em rgba(0, 0, 0, 0.5) inset, 0 0.5em 0.65em 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .dial {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          transform: rotate(0deg);
+          z-index: 10;
+          cursor: grabbing;
+        }
+
+        .dial:before {
+          content: "";
+          position: absolute;
+          bottom: 19%;
+          left: 19%;
+          width: 5%;
+          height: 5%;
+          background-color: rgb(var(--accent-one));
+          border-radius: 50%;
+          box-shadow: 0 0 0.4em 0 rgb(var(--accent-two));
+        }
+
+        .min, .max {
+          display: block;
+          color: rgba(var(--main-light), .4);
+          text-transform: uppercase;
+          font-size: .5rem;
+          position: absolute;
+          opacity: 0.5;
+        }
+
+        .min {
+          bottom: -3em;
+          left: -2.5em;
+        }
+
+        .max {
+          bottom: -3em;
+          right: -2.5em;
+        }
+
+        .tick {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          z-index: 5;
+          overflow: visible;
+        }
+
+        .tick:after {
+          content: "";
+          width: 0.08em;
+          height: 0.6em;
+          background-color: rgba(255, 255, 255, 0.2);
+          position: absolute;
+          top: -1.5em;
+          left: 50%;
+          transition: all .125s ease-out;
+        }
+
+        .activetick:after {
+          background-color: rgb(var(--accent-one));
+          box-shadow: 0 0 0.3em 0.08em rgb(var(--accent-one));
+          transition: all 50ms ease-in;
+        }
+
+        #turboUI {
+            display: none;
+            font-family: "montserrat", sans-serif;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="bg"></div>
+
+    <div id="hud">  
+        <div id="q-app">  
+            <div id="aspiration">                
+                <v-app id="aspiration-stress">
+                    <q-circular-progress class="q-ml-xl prog1" style="transform: rotate(-125deg); opacity: 60%;" :value=70 size="64px" :thickness="0.21" :min="0" :max="100"></q-circular-progress>
+                    <q-circular-progress class="q-ml-xl prog2" style="transform: rotate(-125deg);" show-value :value="aspiration" size="64px" :thickness="0.21" :min="0" :max="100" :color="white" :placeholder=0.0>
+                        <q-icon class="aspiration" style="transform: rotate(125deg);" size="30px"/>
+                    </q-circular-progress>
+                </v-app>
+
+                <v-app id="inertia-stress">
+                    <q-circular-progress class="q-ml-xl prog1" style="transform: rotate(-125deg); opacity: 60%;" :value=70 size="64px" :thickness="0.21" :min="0" :max="100"></q-circular-progress>
+                    <q-circular-progress class="q-ml-xl prog2" style="transform: rotate(-125deg);" show-value :value="inertia" size="64px" :thickness="0.21" :min="0" :max="100" :color="white" :placeholder=0.0>
+                        <q-icon class="inertia" style="transform: rotate(125deg);" size="30px"/>
+                    </q-circular-progress>
+                </v-app>
+            </div>
+
+            <div id="damage">
+                <v-app id="pistons-stress">
+                    <q-circular-progress class="q-ml-xl prog1" style="transform: rotate(-125deg); opacity: 60%;" :value=70 size="64px" :thickness="0.21" :min="0" :max="100"></q-circular-progress>
+                    <q-circular-progress class="q-ml-xl prog2" style="transform: rotate(-125deg);" show-value :value="pistons" size="64px" :thickness="0.21" :min="0" :max="100" :color="pistonsColor" :placeholder=0.0>
+                        <q-icon class="pistons" style="transform: rotate(125deg);" size="30px"/>
+                    </q-circular-progress>
+                </v-app>
+
+                <v-app id="crankshaft-stress">
+                    <q-circular-progress class="q-ml-xl prog1" style="transform: rotate(-125deg); opacity: 60%;" :value=70 size="64px" :thickness="0.21" :min="0" :max="100"></q-circular-progress>
+                    <q-circular-progress class="q-ml-xl prog2" style="transform: rotate(-125deg);" show-value :value="crankshaft" size="64px" :thickness="0.21" :min="0" :max="100" :color="crankshaftColor">
+                        <q-icon class="crankshaft" style="transform: rotate(125deg);" size="30px"/>
+                    </q-circular-progress>
+                </v-app>
+
+                <v-app id="conrods-stress">
+                    <q-circular-progress class="q-ml-xl prog1" style="transform: rotate(-125deg); opacity: 60%;" :value=70 size="64px" :thickness="0.21" :min="0" :max="100"></q-circular-progress>
+                    <q-circular-progress class="q-ml-xl prog2" style="transform: rotate(-125deg);" show-value :value="conrods" size="64px" :thickness="0.21" :min="0" :max="100" :color="conrodsColor">
+                        <q-icon class="conrods" style="transform: rotate(125deg);" size="30px" />
+                    </q-circular-progress>
+                </v-app>
+
+                <v-app id="valves-stress">
+                    <q-circular-progress class="q-ml-xl prog1" style="transform: rotate(-125deg); opacity: 60%;" :value=70 size="64px" :thickness="0.21" :min="0" :max="100"></q-circular-progress>
+                    <q-circular-progress class="q-ml-xl prog2" style="transform: rotate(-125deg);" show-value :value="valves" size="64px" :thickness="0.21" :min="0" :max="100" :color="valvesColor">
+                        <q-icon class="valves" style="transform: rotate(125deg);" size="30px" />
+                    </q-circular-progress>
+                </v-app>
+
+                <v-app id="knocking-stress">
+                    <q-circular-progress class="q-ml-xl prog1" style="transform: rotate(-125deg); opacity: 60%;" :value=70 size="64px" :thickness="0.21" :min="0" :max="100"></q-circular-progress>
+                    <q-circular-progress class="q-ml-xl prog2" style="transform: rotate(-125deg);" show-value :value="knocking" size="64px" :thickness="0.21" :min="0" :max="100" :color="knockingColor">
+                        <q-icon class="knocking" style="transform: rotate(125deg);" size="30px" />
+                    </q-circular-progress>
+                </v-app>
+
+                <v-app id="nitrous-stress">
+                    <q-circular-progress class="q-ml-xl prog1" style="transform: rotate(-125deg); opacity: 60%;" :value=70 size="64px" :thickness="0.21" :min="0" :max="100"></q-circular-progress>
+                    <q-circular-progress class="q-ml-xl prog2" style="transform: rotate(-125deg);" show-value :value="nitrous" size="64px" :thickness="0.21" :min="0" :max="100" :color="nitrousColor">
+                        <q-icon class="nitrous" style="transform: rotate(125deg);" size="30px" />
+                    </q-circular-progress>
+                </v-app>
+            </div>
+        </div>
+    </div>
+
+    <div id="turboUI" class="container">
+        <!-- main wrapper -->
+        <div class="wrapper">
+            <!-- title bar and buttons -->
+            <div class="header__wrapper">
+                <div class="header__title">TURBO TECH</div>
+                <div class="header__controls">
+                    <div id="btn-save" onclick="saveBoostValues()" class="btn"><i class="fa-solid fa-floppy-disk"></i></div>
+                    <div id="btn-close" onclick="closeUI()" class="btn"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
+                </div>
+            </div>
+            <div class="info__wrapper">
+                <!-- all screen content -->
+                <div class="info__screen-target">
+                    <select>
+                        <option value="target1">Target 1</option>
+                        <option value="target2">Target 2</option>
+                        <option value="target2">Target 3</option>
+                    </select>
+                </div>
+                <div class="info__screen">
+                    <!-- target drop down -->
+                    <div class="info__boost-label">Boost</div>
+                    <!-- boost label and current set value -->
+                    <div class="info__screen-boost">
+                        <div class="info__value-wrapper">
+                            <div id="boostValue" class="info__boost-value"></div>
+                            <div class="info__boost-unit">kPa</div>
+                        </div>
+                    </div>
+                    <!-- maximum value -->
+                    <div id="maxAlertWrapper" class="info__max-value-wrapper">
+                        <div id="maxAlert" class="info__maximum-alert">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>WARNING!</span>
+                        </div>
+                        <div class="info__maximum-value">
+                            <span class="info__max-label">max:</span>
+                            <span id="maxBoostValue" class="info__max-boost-value"></span>
+                            <span class="info__boost-unit">kPa</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- dial -->
+                <div class="actions__wrapper">
+                    <div class="dial__wrapper">
+                        <div id="dial" class="dial"></div>
+                        <span class="min">Min</span>
+                        <span class="max">Max</span>
+                        <div id="tick__container" class="ticks"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- footer = logo and led -->
+            <div class="footer__wrapper">
+                <div class="footer__logo">
+                    <i class="fa-brands fa-opencart"></i>
+                    <span>Fast Automotive</span>
+                </div>
+                <!-- led light, variable classes for stress level -->
+                <div id="led" class="led"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page">
+        <div id="container">
+            <div id="nav">
+                <div id="job-info">
+                    <div id="job-image"></div>
+                    <div>
+                        <div id="player-name">Joe Dirt</div>
+                        <div id="job-name">Super Tuning Co.</div>
+                        <div id="job-rank">Experienced Mechanic</div>
+                    </div>
+                </div>
+
+                <div id="items"></div>
+
+                <div id="footer-text"></div>
+
+                <div id="footer">
+                    <div class="fa-solid fa-floppy-disk" data-desc="Save the current tune." onclick="save()"></div>
+                    <div class="fa-solid fa-trash" data-desc="Restore the default tune." onclick="reset()"></div>
+                    <div class="fa-solid fa-rotate-left" data-desc="Restore the previous tune." onclick="restore()"></div>
+                </div>
+            </div>
+
+            <div id="content">
+                <div id="title">
+                    <div class="fa-solid fa-info-circle"></div>
+                    <div id="title-text">Suspension Tuning</div>
+                </div>
+
+                <div id="chart">
+                    <div id="graph"></div>
+
+                    <div id="stats">
+                        <div id="stress"></div>
+                    </div>
+                </div>
+
+                <div id="table-container">
+                	<div id="table"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay">
+        <div id="loader"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2.7.7/dist/quasar.umd.prod.js"></script>   
+
+    <script>
+        // THE ONLY VARIABLES YOU NEED TO CONTROL
+        // THE ONLY VARIABLES YOU NEED TO CONTROL
+        // THE ONLY VARIABLES YOU NEED TO CONTROL
+
+        var minBoostSetting = 220;
+        var maxBoostSetting = 300; //maximum boost allowed visible in info__maximum-value element (This will be set dynamically by tuner script)
+        var startBoostSetting;
+
+        var maxTicksNeeded = maxBoostSetting / 10; // maxboost setting / 10 to round for ticks
+        var dialPositionX;
+        var dialPositionY;
+        var mouseX;
+        var mouseY;
+        var dialCenterX;
+        var dialCenterY;
+        var adjacentSide;
+        var oppositeSide;
+        var currentRadiansAngle;
+        var getRadiansInDegrees;
+        var finalAngleInDegrees;
+        var boostSetting;
+        var tickHighlightPosition;
+        var minHighlightNumTicks;
+
+        var led = document.getElementById("led");
+        var maxAlert = document.getElementById("maxAlert");
+        var maxAlertWrapper = document.getElementById("maxAlertWrapper");
+        var mainContainer = document.getElementById("turboUI");
+
+        var startingTickAngle = -135;
+        var tickContainer = document.getElementById("tick__container");
+        var dial = document.getElementById("dial");
+        var boundingRectangle = dial.getBoundingClientRect(); //get rectangular geometric data of dial (x, y, width, height)
+
+        let turboTargets = {}
+        let boostTarget
+
+        function main() {
+            dial.addEventListener("mousedown", onMouseDown);
+            document.addEventListener("mouseup", onMouseUp);
+
+            createTicks(27, 0);
+        }
+
+        function onMouseDown() {
+            document.addEventListener("mousemove", onMouseMove);
+        }
+
+        function onMouseUp() {
+            document.removeEventListener("mousemove", onMouseMove);
+        }
+
+        function sumDanger(finalAngleInDegrees) {   
+            // VARIABLES FOR WARNING UI ALERTS
+            const healthy = finalAngleInDegrees < 135; // LESS THAN 45%
+            const warning = finalAngleInDegrees > 135 && finalAngleInDegrees < 230; // AROUND 45%
+            const danger = finalAngleInDegrees >= 230; // AROUND 90%
+
+            if (danger) {
+                led.classList.add("led-red");
+                maxAlertWrapper.style.justifyContent = "space-between";
+                maxAlert.style.display = "flex";
+            } else if (warning) {
+                led.classList.remove("led-red");
+                led.classList.add("led-yellow");
+                maxAlertWrapper.style.justifyContent = "flex-end";
+                maxAlert.style.display = "none";
+            } else if (healthy) {
+                led.classList.remove("led-red");
+                led.classList.remove("led-yellow");
+                maxAlertWrapper.style.justifyContent = "flex-end";
+                maxAlert.style.display = "none";
+            }
+        }
+
+        //compute mouse angle relative to center of dial
+        function onMouseMove(event) {
+            dialPositionX = boundingRectangle.left; //get dial's global x position
+            dialPositionY = boundingRectangle.top; //get dial's global y position
+
+            mouseX = event.pageX; //get mouse's x global position
+            mouseY = event.pageY; //get mouse's y global position
+
+            dialCenterX = boundingRectangle.width / 2 + dialPositionX; //get global horizontal center position of dial relative to mouse position
+            dialCenterY = boundingRectangle.height / 2 + dialPositionY; //get global vertical center position of dial relative to mouse position
+
+            adjacentSide = dialCenterX - mouseX; //compute adjacent value of imaginary right angle triangle
+            oppositeSide = dialCenterY - mouseY; //compute opposite value of imaginary right angle triangle
+
+            //arc-tangent function returns circular angle in radians
+            //use atan2() instead of atan() because atan() returns only 180 degree max (PI radians) but atan2() returns four quadrant's 360 degree max (2PI radians)
+            currentRadiansAngle = Math.atan2(adjacentSide, oppositeSide);
+
+            getRadiansInDegrees = currentRadiansAngle * 180 / Math.PI; //convert radians into degrees
+
+            finalAngleInDegrees = -(getRadiansInDegrees - 135); //dial starts at -135 degrees due to visual design so 135 degrees needs to be subtracted to compensate for the angle offset, negative value represents clockwise direction
+
+            //ALLOW ROTATION IF GREATER THAN 0 and LESS THAN 270 DEGREES
+            if(finalAngleInDegrees >= 0 && finalAngleInDegrees <= 270) {
+                dial.style.transform = "rotate(" + finalAngleInDegrees + "deg)"; //use dynamic CSS transform to rotate dial
+
+                //270 degrees maximum freedom of rotation / 100% = 1% of difference per 2.7 degrees of rotation
+                boostSetting = Math.floor(finalAngleInDegrees / (270 / maxBoostSetting));
+
+                tickHighlightPosition = Math.round((boostSetting * 2.7) / maxTicksNeeded); //interpolate how many ticks need to be highlighted
+
+                turboTargets[boostTarget].value = finalAngleInDegrees / 270
+
+                document.getElementById("boostValue").innerHTML = Math.floor(boostSetting);
+
+                createTicks(27, tickHighlightPosition); //HIGHLIGHT TICKS
+
+                sumDanger(Math.min(320,finalAngleInDegrees))
+            }
+        }
+
+        //CREATE DIAL TICKS DYNAMICALLY
+        function createTicks(numTicks, highlightNumTicks)
+        {
+            //RESET FIRST BY DELETING ALL TICKS
+            while(tickContainer.firstChild)
+            {
+                tickContainer.removeChild(tickContainer.firstChild);
+            }
+
+            //CREATE TICKS
+            for (var i=0;i<numTicks;i++)
+            {
+                var tick = document.createElement("div");
+                
+                //HIGHLIGHT ONLY THE APPROPRIATE TICKS
+                if (i < highlightNumTicks) {
+                    tick.className = "tick activetick";
+                } else {
+                    tick.className = "tick";
+                }
+
+                tickContainer.appendChild(tick);
+                tick.style.transform = "rotate(" + startingTickAngle + "deg)";
+                startingTickAngle += 10;
+
+            }
+
+            startingTickAngle = -135; //reset
+        }
+
+        // SET ALL BASE VALUES ON UI LOAD //
+        function setBaseValues() {
+            if (minBoostSetting != "nil") {
+                // SET STARTING ROTATION BASED ON PREVIOUSLY SAVED BOOST SETTING
+                finalAngleInDegrees = Math.round(((minBoostSetting * 2.7) / maxTicksNeeded)*10);
+                dial.style.transform = "rotate(" + finalAngleInDegrees + "deg)";
+                // WORKING ON HIGHLIGHTING TICKS BASED ON PREVIOUSLY SAVED BOOST SETTING
+                minHighlightNumTicks = Math.round((minBoostSetting * 2.7) / maxTicksNeeded);
+                createTicks(27, minHighlightNumTicks);
+                sumDanger(finalAngleInDegrees)
+            }
+            
+            document.getElementById("boostValue").innerHTML = Math.floor(minBoostSetting); // SET MIN BOOST VALUE ON UI START
+            document.getElementById("maxBoostValue").innerHTML = maxBoostSetting; // SET MAX BOOST VALUE ON UI START
+        }
+
+        function saveBoostValues() {
+            $(mainContainer).fadeOut(200);
+            $.post(`https://${GetParentResourceName()}/saveBoost`,JSON.stringify(turboTargets))
+        };
+
+        function closeUI() {
+            $(mainContainer).fadeOut(200);
+            $.post(`https://${GetParentResourceName()}/closed`)
+        };
+
+        function setTurboTargets(targets) {
+            turboTargets = targets;
+
+            $("select").html("")
+
+            let target
+
+            for (let key in targets) {
+                let value = targets[key]
+                $("select").append(`<option value=\"${key}\">${value.label}</option>`)
+
+                if (!target) {
+                    target = key
+                }
+            }
+
+            if (target) {
+                minBoostSetting = targets[target].value * 300
+                boostTarget = target
+            }
+
+            mainContainer.style.display = "block";
+            boundingRectangle = dial.getBoundingClientRect();
+            setBaseValues();
+        }
+
+        $("select").on("change",(e) => {
+            boostTarget = e.currentTarget.value
+            minBoostSetting = turboTargets[boostTarget].value * 300
+            setBaseValues();
+        })
+
+        main();
+
+        // setTurboTargets({
+        //     "turboBoost1":{label:"Turbo 1",value:0.5},
+        //     "turboBoost2":{label:"Turbo 2",value:1.0}
+        // })
+    </script>
+
+    <script>
+    /*
+        Example kicking off the UI. Obviously, adapt this to your specific needs.
+        Assumes you have a <div id="q-app"></div> in your <body> above
+    */        
+
+        function lerpColor(a, b, amount) { 
+            var ah = parseInt(a.replace(/#/g, ''), 16),
+                ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+                bh = parseInt(b.replace(/#/g, ''), 16),
+                br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+                rr = ar + amount * (br - ar),
+                rg = ag + amount * (bg - ag),
+                rb = ab + amount * (bb - ab);
+
+            return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+        }
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                    pistons: 0.0,
+                    valves: 0.0,
+                    conrods: 0.0,
+                    crankshaft: 0.0,
+                    knocking: 0.0,
+                    aspiration: 0.0,
+                    inertia:0.0,
+
+                    pistonsColor: "white",
+                    valvesColor: "white",
+                    conrodsColor: "white",
+                    crankshaftColor: "white",
+                    knockingColor: "white",
+                    aspirationColor: "white",
+                    inertiaColor: "white",
+                    nitrousColor: "white",
+                }
+            },
+
+            mounted() {
+                window.SetProgress = this.set
+                window.GetProgress = this.get
+            },
+
+            methods:{
+                set(k,v) {
+                    this[k] = 70 * (v / 100)
+                    this[k + "Color"] = "red-" + Math.ceil(v / 10)
+                },
+
+                get(k) {
+                    return 100 * (this[k] / 70)
+                }
+            }
+        })
+
+        app.use(Quasar)
+        app.mount('#q-app')
+
+        let hudItemsShown = {}
+        let prev
+
+        function animLoop() {
+            let nextRequired = false
+
+            let now = Date.now()
+
+            if (!prev) {
+                prev = now            
+                return reqAnimFrame()
+            }
+
+            let add = 0.05
+
+            for (let key in hudItemsShown) {
+                if (hudItemsShown[key]) {
+                    let hudItem = hudItemsShown[key]
+
+                    if (now - hudItem.time >= 1000) {
+                        hudItemsShown[key] = undefined
+
+                        let e = document.getElementById(key + "-stress")
+                        e.style.opacity = 0
+
+                        setTimeout(function() {
+                            e.style.display = "none"
+                        },200)
+                    } else {
+                        nextRequired = true
+                    }
+                }
+            }
+
+            prev = now
+                
+            if (nextRequired) {
+                reqAnimFrame()
+            } else {
+                prev = false
+            }
+        }
+
+        function reqAnimFrame() {      
+            window.requestAnimationFrame(animLoop)
+        }
+
+        function ensureHudItem(key,value) {
+            if (!hudItemsShown[key]) {
+                hudItemsShown[key] = {
+                    time: Date.now(),
+                    value:value
+                }
+
+                let e = document.getElementById(key + "-stress")
+                e.style.display = "block"
+                e.style.opacity = 0
+
+                setTimeout(function() {
+                    e.style.opacity = 1
+                    SetProgress(key,value)
+                },200)
+
+                reqAnimFrame()
+            } else {
+                hudItemsShown[key].time = Date.now()
+                hudItemsShown[key].value = value
+
+                let e = document.getElementById(key + "-stress")
+                e.style.display = "block"
+                e.style.opacity = 1
+
+                SetProgress(key,value)
+
+                reqAnimFrame()
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        let playerData,tuningData,engineStats,engineTorque
+        let selectedCategory
+        let chart
+
+        function updateHudItems(items) {
+            for (let key in items) {
+                ensureHudItem(key,items[key])
+            }
+        }
+
+        function toggleBoostController(targets) {
+            setTurboTargets(targets)
+        }
+
+        function save() {
+            document.getElementById("overlay").style.display = "block"
+            $.post(`https://${GetParentResourceName()}/save`,JSON.stringify(tuningData))
+        }
+
+        function reset() {
+            document.getElementById("overlay").style.display = "block"
+            $.post(`https://${GetParentResourceName()}/reset`)
+        }
+
+        function restore() {
+            document.getElementById("overlay").style.display = "block"
+            $.post(`https://${GetParentResourceName()}/restore`)
+        }
+
+        (function() {
+            let txt = document.getElementById("footer-text")
+            let buttons = document.querySelectorAll("#footer > div")
+
+            let targetButton
+
+            for (let i=0;i<buttons.length;i++) {
+                let button = buttons[i]
+
+                button.addEventListener("mouseenter",(e) => {
+                    targetButton = button
+                    txt.innerHTML = button.dataset.desc     
+                })
+
+                button.addEventListener("mouseleave",(e) => {
+                    if (targetButton == button) {
+                        txt.innerHTML = ""
+                    }
+                })
+            }
+        })()
+
+        const eles = {
+            playerName:document.getElementById("player-name"),
+            jobName:document.getElementById("job-name"),
+            jobRank:document.getElementById("job-rank"),
+            jobImage:document.getElementById("job-image"),
+
+            items:document.getElementById("items"),
+
+            titleText:document.getElementById("title-text"),
+            graph:document.getElementById("graph"),
+            table:document.getElementById("table"),
+
+            flow:document.getElementById("flow"),
+            stress:document.getElementById("stress"),
+        }
+
+        function selectCategory(ele,name,params) {
+            if (selectedCategory) {
+                selectedCategory.classList.remove("selected")
+            }
+
+
+            selectedCategory = ele
+            ele.classList.add("selected")
+
+            eles.titleText.innerHTML = name + " Tuning"
+            eles.table.innerHTML = `
+                <div class="header">Parameter</div>
+                <div class="header">Min</div>
+                <div class="header">Max</div>
+                <div class="header">Default</div>
+                <div class="header">Value</div>
+            `;   
+
+            eles.table.style.gridTemplateRows = ("60px ").repeat(params.length+1)         
+
+            params.sort((a,b) => {
+                if (a.label > b.label) {
+                    return 1
+                } else if (a.label < b.label) {
+                    return -1
+                } else {
+                    return 0
+                }
+            })
+
+            for (let i=0;i<params.length;i++) {
+                let param = params[i]
+                let label = document.createElement("DIV")
+                label.className = "label"
+                label.innerHTML = `
+                    <div>${param.label || ""}</div>
+                    <div>${param.description || ""}</div>
+                `
+
+                let min = document.createElement("DIV")
+                min.className = "item"
+                min.innerHTML = param.min.toFixed(2)
+
+                let max = document.createElement("DIV")
+                max.className = "item"
+                max.innerHTML = param.max.toFixed(2)
+
+                let def = document.createElement("DIV")
+                def.className = "item"
+                def.innerHTML = param.default.toFixed(2)
+
+                let leftArrowContainer = document.createElement("DIV")
+                leftArrowContainer.className = "arrow-container"
+
+                let rightArrowContainer = document.createElement("DIV")
+                rightArrowContainer.className = "arrow-container"
+
+                let leftArrow = document.createElement("SVG")
+                leftArrow.className = "fa-solid fa-chevron-left"
+
+                let rightArrow = document.createElement("SVG")
+                rightArrow.className = "fa-solid fa-chevron-right"
+
+                let value = document.createElement("DIV")
+                value.className = "value"
+
+                let input = document.createElement("INPUT")
+                input.type = "number"
+                input.value = param.value.toFixed(3)
+
+                leftArrowContainer.append(leftArrow)
+                rightArrowContainer.append(rightArrow)
+
+                value.append(leftArrowContainer)
+                value.append(input)
+                value.append(rightArrowContainer)
+
+                let valueContainer = document.createElement("DIV")
+                valueContainer.className = "value-container"
+
+                let sliderContainer = document.createElement("DIV")
+                sliderContainer.className = "input"
+
+                let valueSlider = document.createElement("INPUT")
+                valueSlider.className = "slider"
+                valueSlider.type = "range"
+                valueSlider.min = param.min * 100
+                valueSlider.max = param.max * 100
+                valueSlider.value = param.value * 100
+                valueSlider.step = 1
+
+                sliderContainer.append(valueSlider)
+
+                valueContainer.append(value)
+                valueContainer.append(sliderContainer)
+
+                eles.table.append(label)
+                eles.table.append(min)
+                eles.table.append(max)
+                eles.table.append(def)
+                eles.table.append(valueContainer)
+
+                leftArrowContainer.addEventListener("click",(e) => {
+                    param.value = Math.max(param.min,param.value - 0.01)
+                    input.value = param.value.toFixed(3)
+                    valueSlider.value = input.value * 100
+
+                    $.post(`https://${GetParentResourceName()}/change`,JSON.stringify(param))
+                })
+
+                rightArrowContainer.addEventListener("click",(e) => {
+                    param.value = Math.min(param.max,param.value + 0.01)
+                    input.value = param.value.toFixed(3)
+                    valueSlider.value = input.value * 100
+
+                    $.post(`https://${GetParentResourceName()}/change`,JSON.stringify(param))
+                })
+
+                input.addEventListener("change",(e) => {
+                    param.value = Math.min(param.max,Math.max(param.min,parseFloat(input.value)))
+                    input.value = param.value.toFixed(3)
+                    valueSlider.value = input.value * 100
+
+                    $.post(`https://${GetParentResourceName()}/change`,JSON.stringify(param))
+                })
+
+                let sending
+
+                valueSlider.addEventListener("input",(e) => {
+                    param.value = Math.min(param.max,Math.max(param.min,parseFloat(valueSlider.value / 100)))
+                    input.value = param.value.toFixed(3)
+
+                    if (!sending) {
+                        sending = true
+
+                        setTimeout(() => {
+                            $.post(`https://${GetParentResourceName()}/change`,JSON.stringify(param))
+                            sending = false
+                        },10)
+                    }
+                })
+            }
+        }
+
+        function redrawChart(curve = [
+                {value:0.2,time:0.0},
+                {value:0.4,time:0.2},
+                {value:0.6,time:0.4},
+                {value:0.8,time:0.6},
+                {value:1.0,time:0.8},
+                {value:0.8,time:1.0},
+            ],maxRpm = 6000,engineLabel = "UNKNOWN") {    
+            chart = new google.visualization.LineChart(document.getElementById("graph"));
+
+            let chartData = [
+                ['RPM','Torque','Horsepower']
+            ]
+
+            for (i=0;i<curve.length;i++) {
+                let t = curve[i].time
+                let tq = (curve[i].value)
+                let rpm = maxRpm * t
+
+                chartData.push([
+                    Math.max(0.001,rpm),
+                    Math.max(0.001,tq),
+                    Math.max(0.001,torqueToHorsepower(tq,rpm))
+                ])
+            }
+
+            GraphOptions.title = engineLabel
+
+            let data = google.visualization.arrayToDataTable(chartData)
+            chart.draw(data,GraphOptions);
+        }
+
+        function update(_engineStats,_engineTorque,_peakRpm,_engineLabel) {
+            engineStats = _engineStats
+            engineTorque = _engineTorque
+
+            let c = 0
+
+            for (let key in engineStats) {
+                let scrollTop = $(eles[key]).children().last().scrollTop()
+
+                eles[key].innerHTML = `
+                    <div>
+                        <div>${key}</div>
+                    </div>
+                `
+
+                let parent = document.createElement("DIV")
+
+                eles[key].append(parent)
+
+                let eKeys = Object.keys(engineStats[key])
+
+                eKeys.sort((a,b) => {
+                    if (a > b) {
+                        return 1
+                    } else if (a < b) {
+                        return -1
+                    } else {
+                        return 0
+                    }
+                })
+
+                for (let i=0;i<eKeys.length;i++) {
+                    let k = eKeys[i]
+                    let value = Math.floor(engineStats[key][k] * 100)
+
+                    let ele = document.createElement("DIV")
+                    ele.className = "status"
+
+                    ele.innerHTML = `
+                        <div>${value}%</div>
+                        <div>${k}</div>
+                    `                   
+
+                    ele.style.background = `linear-gradient(to top,#614385 0%,#614385 ${value}%,rgb(20,20,20) ${value}%,rgb(20,20,20) 100%)`
+
+                    parent.append(ele)
+
+                    c++
+                }
+
+                $(eles[key]).children().last().scrollTop(scrollTop)
+            }
+
+            if (c == 0) {
+                document.getElementById("stats").style.display = "none"
+                document.getElementById("chart").style.gridTemplateColumns = "100%"
+            } else {
+                document.getElementById("stats").style.display = "grid"   
+                document.getElementById("chart").style.gridTemplateColumns = "calc(100% - 200px) 200px)"        
+            }
+            
+            redrawChart(engineTorque,_peakRpm,_engineLabel)
+        }
+
+        function openHud() {            
+            $("#page").css("display","none")
+            $("#hud").css("display","flex")
+        }
+
+        function openMenu(_playerData,_tuningData,_engineStats,_engineTorque,_peakRpm,_engineLabel) {
+            playerData      = _playerData
+            tuningData      = _tuningData
+            engineStats     = _engineStats
+            engineTorque    = _engineTorque
+
+            eles.playerName.innerHTML = playerData.playerName
+            eles.jobName.innerHTML = playerData.jobName
+            eles.jobRank.innerHTML = playerData.jobRank
+            eles.jobImage.style.backgroundImage = `url("${playerData.jobImage}")`
+
+            eles.items.innerHTML = ""
+
+            let cKeys = Object.keys(tuningData)
+
+            cKeys.sort((a,b) => {
+                if (a > b) {
+                    return 1
+                } else if (a < b) {
+                    return -1
+                } else {
+                    return 0
+                }
+            })
+
+            for (let i=0;i<cKeys.length;i++) {
+                let category = cKeys[i]
+                let categoryData = tuningData[category]
+
+                let tKeys = Object.keys(categoryData)
+
+                if (tKeys.length > 0) {
+                    let cEle = document.createElement("DIV")
+                    cEle.className = "category"
+                    cEle.innerHTML = category
+
+                    eles.items.append(cEle)
+
+                    tKeys.sort((a,b) => {
+                        if (a > b) {
+                            return 1
+                        } else if (a < b) {
+                            return -1
+                        } else {
+                            return 0
+                        }
+                    })
+
+                    let tEles = []
+                    let targetEle 
+
+                    for (let j=0;j<tKeys.length;j++) {
+                        let key = tKeys[j]
+                        let category = categoryData[key]
+
+                        let ele = document.createElement("DIV")
+                        ele.className = "item"
+                        ele.innerHTML = key
+                        ele.setAttribute("data-category",key)
+
+                        eles.items.append(ele)
+
+                        ele.addEventListener("click",() => {
+                            selectCategory(ele,key,category)
+                        })
+
+                        if (selectedCategory == undefined && targetEle == undefined && j == 0 || selectedCategory != undefined && selectedCategory.getAttribute("data-category") == key) {
+                            targetEle = ele
+                        }
+
+                        tEles.push(ele)
+                    }
+
+                    if (targetEle) {
+                        targetEle.dispatchEvent(new Event("click"))
+                    }
+                }
+            }
+
+            let c = 0
+
+            if (engineStats) {
+                for (let key in engineStats) {
+                    eles[key].innerHTML = `
+                        <div>
+                            <div>${key}</div>
+                        </div>
+                    `
+
+                    let parent = document.createElement("DIV")
+
+                    eles[key].append(parent)
+
+                    let eKeys = Object.keys(engineStats[key])
+
+                    eKeys.sort((a,b) => {
+                        if (a > b) {
+                            return 1
+                        } else if (a < b) {
+                            return -1
+                        } else {
+                            return 0
+                        }
+                    })
+
+                    for (let i=0;i<eKeys.length;i++) {
+                        let k = eKeys[i]
+                        let value = Math.floor(engineStats[key][k] * 100)
+
+                        let ele = document.createElement("DIV")
+                        ele.className = "status"
+
+                        ele.innerHTML = `
+                            <div>${value}%</div>
+                            <div>${k}</div>
+                        `                   
+
+                        ele.style.background = `linear-gradient(to top,#614385 0%,#614385 ${value}%,rgb(20,20,20) ${value}%,rgb(20,20,20) 100%)`
+
+                        parent.append(ele)
+
+                        c++
+                    }
+                }
+            }
+
+            if (c == 0) {
+                document.getElementById("stats").style.display = "none"
+                document.getElementById("chart").style.gridTemplateColumns = "100%"
+            } else {
+                document.getElementById("stats").style.display = "flex"   
+                document.getElementById("chart").style.gridTemplateColumns = "calc(100% - 240px) 240px"        
+            }
+
+            $("#page").css("display","flex")
+            $("#hud").css("display","none")
+
+            document.body.style.opacity = 1
+            redrawChart(engineTorque,_peakRpm,_engineLabel)
+        }   
+
+        function setOpacity(o) {
+            document.body.style.opacity = o || 0
+        }
+
+        function torqueToHorsepower(torque,rpm) {
+            return torque * rpm / 5252;
+        }   
+        
+        google.charts.load('current',{'packages':['corechart']});
+
+        window.addEventListener("message",(e) => {
+            if (!e.data.func || !window[e.data.func]) {
+                return
+            }
+
+            let args
+
+            try {
+                args = JSON.parse(e.data.args)
+            } catch(e) {
+                console.error(e)
+            }
+
+            document.getElementById("overlay").style.display = "none"
+
+            window[e.data.func](...args)
+        }) 
+
+        window.addEventListener("keydown",(e) => {    
+            if (e.key == "Backspace" && e.target.tagName == "INPUT") {
+                return
+            }
+
+            switch (e.key) {
+                case "Backspace":
+                case "Escape":
+                    openHud()
+                    $(mainContainer).fadeOut(200);
+                    $.post(`https://${GetParentResourceName()}/closed`)
+                break
+
+                case "Shift":
+                    setOpacity(0)
+                break
+
+                case "Control":
+                    setOpacity(0)
+                    $.post(`https://${GetParentResourceName()}/hide`)
+                break
+            }
+        }) 
+
+        window.addEventListener("keyup",(e) => {
+            switch (e.key) {
+                case "Shift":
+                    setOpacity(1)
+                break
+
+                case "Control":
+                    setOpacity(1)
+                    $.post(`https://${GetParentResourceName()}/unhide`)
+                break
+            }
+        })
+
+        google.charts.setOnLoadCallback(function() {
+            if (typeof GetParentResourceName != "undefined") {
+                return
+            }
+
+            openMenu({
+                playerName:"John Smith",
+                jobName:"Super Engines Co.",
+                jobRank:"Expert Tuner",
+                jobImage:"tuning.png"
+            },{
+                handling:{
+                    suspension:[
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                    ],
+                    transmission:[
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                    ],
+                    traction:[
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                    ],
+                    rollbars:[
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                        {label:"Steering Lock",description:"Adjusts the steering angle and transition speed.",min:0.1,max:2.0,default:1.0,value:1.5},
+                    ],
+                },
+                engine:{
+                    "air & fuel":[                  
+                        {label:"Compression Ratio",description:"Adjusts the compression ratio for each cylinder.",min:4.0,max:16.0,default:10.0,value:11.0},
+                        {label:"Cam Profile",description:"Shift the peak powerband for the engine.",min:0,max:100,default:50,value:75},
+                        {label:"VVL Profile",description:"Adjust VVL profile, complementing the cam profile",min:0,max:100,default:50,value:80},          
+                        {label:"Air/Fuel Ratio",description:"Adjusts the amount of air to fuel ratio for this engine.",min:10.0,max:20.0,default:14.0,value:14.7},
+                        {label:"Ignition Timing",description:"Retard or advance the ignition timing of this engine.",min:0,max:100,default:50,value:75},
+                    ],
+                    "exhaust":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust1":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust2":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust3":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust4":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust5":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "air & fuel1":[                  
+                        {label:"Compression Ratio",description:"Adjusts the compression ratio for each cylinder.",min:4.0,max:16.0,default:10.0,value:11.0},
+                        {label:"Cam Profile",description:"Shift the peak powerband for the engine.",min:0,max:100,default:50,value:75},
+                        {label:"VVL Profile",description:"Adjust VVL profile, complementing the cam profile",min:0,max:100,default:50,value:80},          
+                        {label:"Air/Fuel Ratio",description:"Adjusts the amount of air to fuel ratio for this engine.",min:10.0,max:20.0,default:14.0,value:14.7},
+                        {label:"Ignition Timing",description:"Retard or advance the ignition timing of this engine.",min:0,max:100,default:50,value:75},
+                    ],
+                    "exhaust1":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust11":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust21":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust31":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust41":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                    "exhaust51":[
+                        {label:"Headers Diameter",description:"Adjusts the diameter of the exhaust headers.",min:10.0,max:150.0,default:40.0,value:50.0},
+                        {label:"Exhaust Diameter",description:"Adjusts the diameter of the exhaust system.",min:10.0,max:150.0,default:40.0,value:80.0},
+                    ],
+                }
+            },{
+                stress:{
+                    pistons:85.0,
+                    conrods:5.0,
+                    valves:45.0,
+                    crankshaft:15.0,
+                }
+            },[
+                {time:0.0,value:0.0},
+                {time:0.5,value:1.0},
+                {time:1.0,value:0.5}
+            ])            
+        })
+        
+    </script>
+</body>
+</html>

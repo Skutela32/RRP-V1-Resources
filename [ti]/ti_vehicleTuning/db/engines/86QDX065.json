@@ -1,0 +1,110 @@
+{
+    "name": "2JZ",
+    "intercooler": {
+        "stats": {
+            "size": 500.0,
+            "quality": 50.0,
+            "material": "aluminium"
+        },
+        "name": "2JZ-GTE Intercooler"
+    },
+    "intake": {
+        "stats": {
+            "material": "aluminium",
+            "quality": 50.0,
+            "system": "performance"
+        },
+        "name": "2JZ-GTE Intake"
+    },
+    "typeof": "engine",
+    "pistons": {
+        "stats": {
+            "material": "aluminium",
+            "quality": 50.0,
+            "diameter": 86.0
+        },
+        "name": "2JZ-GTE Pistons"
+    },
+    "variant": "GTE",
+    "valves": {
+        "stats": {
+            "quality": 50.0,
+            "material": "aluminium"
+        },
+        "name": "2JZ-GTE Valves"
+    },
+    "exhaust": {
+        "stats": {
+            "material": "aluminium",
+            "quality": 50.0,
+            "diameter": 50.0
+        },
+        "name": "2JZ-GTE Exhaust"
+    },
+    "conrods": {
+        "stats": {
+            "material": "aluminium",
+            "length": 86.0,
+            "quality": 50.0
+        },
+        "name": "2JZ-GTE Conrods"
+    },
+    "aspiration": {
+        "stats": {
+            "material": "aluminium",
+            "compressor2": 12.0,
+            "turbine2": 25.0,
+            "system": "turbocharger",
+            "method": "twin",
+            "turbine": 40.0,
+            "quality": 50.0,
+            "compressor": 25.0
+        },
+        "name": "2JZ-GTE Twin Turbos"
+    },
+    "heads": {
+        "stats": {
+            "material": "aluminium",
+            "config": "DOHC",
+            "vvl": false,
+            "quality": 50.0,
+            "valves": 4
+        },
+        "name": "2JZ-GTE Heads"
+    },
+    "headers": {
+        "stats": {
+            "material": "aluminium",
+            "quality": 50.0,
+            "diameter": 30.0
+        },
+        "name": "2JZ-GTE Headers"
+    },
+    "block": {
+        "stats": {
+            "bore": 86.0,
+            "layout": "inline",
+            "cylinders": 6,
+            "material": "aluminium",
+            "quality": 50.0,
+            "stroke": 86.0
+        },
+        "name": "2JZ"
+    },
+    "crankshaft": {
+        "stats": {
+            "quality": 50.0,
+            "material": "aluminium"
+        },
+        "name": "2JZ-GTE Crankshaft"
+    },
+    "fuel": {
+        "stats": {
+            "method": "direct",
+            "deliver": "per-cylinder",
+            "quality": 50.0,
+            "system": "injection"
+        },
+        "name": "2JZ-GTE Fuel System"
+    }
+}

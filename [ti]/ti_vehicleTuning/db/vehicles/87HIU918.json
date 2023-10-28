@@ -1,0 +1,122 @@
+{
+    "engine": {
+        "damagedComponents": false,
+        "nitrousLevel": 100,
+        "tune": {
+            "heads": {
+                "compRatio": 1.0,
+                "vvlProfile": 0.54,
+                "camProfile": 0.38,
+                "airflow": 1.0
+            },
+            "aspiration": {
+                "turboBoost2": 1.0,
+                "turboSize1": 1.0,
+                "turboBoost1": 1.0,
+                "turboSize2": 0.0,
+                "superchargerSize": 0.5,
+                "superchargerBoost": 0.5
+            },
+            "nitrous": {
+                "rampEnd": 1.0,
+                "rampEndBoost": 1.0,
+                "rampStart": 0.3,
+                "rampInit": 1.0,
+                "rampStartBoost": 1.0
+            },
+            "fuel": {
+                "afRatio": 1.0,
+                "limiter": 0.5,
+                "timing": 1.0
+            }
+        },
+        "build": {
+            "crankshaft": {
+                "quality": 1.0,
+                "material": "titanium"
+            },
+            "nitrous": {
+                "quality": 1.0,
+                "size": 1.0
+            },
+            "fuelDelivery": {
+                "quality": 1.0
+            },
+            "block": {
+                "layout": "inline",
+                "quality": 1.0,
+                "stroke": 0.66,
+                "bore": 0.66,
+                "cylinders": 6
+            },
+            "heads": {
+                "valves": 4,
+                "layout": "dohc",
+                "quality": 1.0,
+                "vvl": true
+            },
+            "conrods": {
+                "quality": 1.0,
+                "material": "titanium"
+            },
+            "aspiration": {
+                "system": "twin",
+                "size": 1.0,
+                "quality": 1.0,
+                "typeof": "turbocharger"
+            },
+            "pistons": {
+                "quality": 1.0,
+                "material": "titanium"
+            },
+            "valves": {
+                "quality": 1.0,
+                "material": "titanium"
+            }
+        }
+    },
+    "handling": {
+        "fSuspensionCompDamp": 1.5,
+        "fClutchChangeRateScaleDownShift": 10.0,
+        "fTractionCurveMax": 10.0,
+        "fTractionCurveLateral": 50.0,
+        "fTractionSpringDeltaMax": 0.0,
+        "fAntiRollBarBiasFront": 0.60000002384185,
+        "fLowSpeedTractionLossMult": 0.0,
+        "fBrakeBiasFront": 0.44999998807907,
+        "fRollCentreHeightFront": 0.60000000357627,
+        "fTractionCurveMin": 10.0,
+        "fRollCentreHeightRear": 0.60000000357627,
+        "fSuspensionRaise": -0.00120000005699,
+        "fSuspensionBiasFront": 0.47350001335144,
+        "fSuspensionForce": 2.65000009536743,
+        "fSuspensionReboundDamp": 2.20000004768371,
+        "fSuspensionLowerLimit": -0.10999999940395,
+        "fTractionBiasFront": 0.55500001430511,
+        "fSuspensionUpperLimit": 0.05000000074505,
+        "fCamberStiffnesss": 0.0,
+        "fHandBrakeForce": 0.5,
+        "fDriveBiasFront": 0.5,
+        "fAntiRollBarForce": 0.89999997615814,
+        "fClutchChangeRateScaleUpShift": 10.0,
+        "fSteeringLock": 40.0,
+        "fBrakeForce": 10.0,
+        "fTractionLossMult": 0.0
+    },
+    "stance": {
+        "yRot": {
+            "0": 0.0,
+            "3": -0.0,
+            "2": 0.0,
+            "1": -0.0
+        },
+        "xOff": {
+            "0": -0.80386328697204,
+            "3": 0.82637840509414,
+            "2": -0.8254736661911,
+            "1": 0.80386328697204
+        },
+        "wheelSize": 0.0,
+        "wheelWidth": 0.0
+    }
+}
